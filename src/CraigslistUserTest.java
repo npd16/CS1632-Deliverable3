@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.junit.*;
-
 /**
  * As a new user,
  * I would like basic, easy to use navigation,
@@ -70,9 +68,9 @@ public class CraigslistUserTest {
 	// Then I should be taken to the sign in or sign up page
 	@Test
 	public void testMyAccountPage() throws Exception {
-		driver.findElement(By.cssSelector("a.hhh > span.txt")).click();
+		driver.findElement(By.xpath("(//a[contains(text(),'my account')])[2]")).click();
 		String newPageTitle = driver.getTitle();
-		assertTrue(newPageTitle.contains("housing, apartments,"));
+		assertTrue(newPageTitle.contains("account log in"));
 	}
 	
 	// Given that I am on the main page
