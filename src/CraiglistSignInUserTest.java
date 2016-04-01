@@ -1,6 +1,8 @@
 import static org.junit.Assert.*;
 
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -18,26 +20,19 @@ public class CraiglistSignInUserTest {
 	static WebDriver driver = new HtmlUnitDriver();
 	
 	// Start at the main page for craigslist
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
 		driver.get("https://pittsburgh.craigslist.org");
-		driver.findElement(By.xpath("(//a[contains(text(),'my account')])[2]")).click();
+	    driver.findElement(By.linkText("my account")).click();
 	    driver.findElement(By.id("inputEmailHandle")).clear();
 	    driver.findElement(By.id("inputEmailHandle")).sendKeys("npdcs1632@gmail.com");
 	    driver.findElement(By.id("inputPassword")).clear();
 	    driver.findElement(By.id("inputPassword")).sendKeys("qualityassurance");
 	    driver.findElement(By.cssSelector("button[type=\"submit\"]")).click();
+
 	}
 	
-	// Given that I am on the account page
-	// When I click on "log out"
-	// Then I should be able to sign in
-	@Test
-	public void testLogout() {
-		driver.findElement(By.linkText("log out")).click();
-		String text = driver.findElement(By.cssSelector("h4.ban")).getText();
-		assertTrue(text.contains("Log in"));
-	}
+	
 	
 	// Given that I am on the account page
 	// When I click on the "settings" tab
@@ -52,7 +47,6 @@ public class CraiglistSignInUserTest {
 		} catch (NoSuchElementException nseex){
 			fail("Not on the correct setting's page");
 		}
-		driver.findElement(By.linkText("log out")).click();
 	}
 	
 	// Given that I am on the searches tab on the account page
@@ -65,7 +59,6 @@ public class CraiglistSignInUserTest {
 		String search = driver.findElement(By.id("query")).getAttribute("value");
 		assertEquals("macbook",search);
 		driver.findElement(By.linkText("account")).click();
-		driver.findElement(By.linkText("log out")).click();		
 	}
 	
 	// Given that I am on the settings tab
@@ -86,7 +79,6 @@ public class CraiglistSignInUserTest {
 	    assertTrue(error.contains("Passwords you entered did not match"));
 	    driver.navigate().back();
 	    driver.navigate().back();
-	    driver.findElement(By.linkText("log out")).click();	
 	}
 	
 	// Given that I am on the change email page
@@ -95,7 +87,7 @@ public class CraiglistSignInUserTest {
 	@Test
 	public void testInvalidEmail() {
 		driver.findElement(By.linkText("settings")).click();
-	    driver.findElement(By.linkText("change")).click();
+		driver.findElement(By.linkText("change")).click();
 	    driver.findElement(By.name("inputNewEmail")).clear();
 	    driver.findElement(By.name("inputNewEmail")).sendKeys("cs1632rules");
 	    driver.findElement(By.name("inputNewEmailRetype")).clear();
@@ -105,8 +97,27 @@ public class CraiglistSignInUserTest {
 	    assertTrue(error.contains("The email address you entered (cs1632rules) doesn't look right"));
 	    driver.navigate().back();
 	    driver.navigate().back();
-	    driver.findElement(By.linkText("log out")).click();
-
+	}
+	
+	// Given that I am on the account page
+	// When I click on "log out"
+	// Then I should be able to sign in
+	@Test
+	public void testLogout() {
+		driver.findElement(By.linkText("log out")).click();
+		String text = driver.findElement(By.cssSelector("h4.ban")).getText();
+		assertTrue(text.contains("Log in"));
+		
+	    driver.findElement(By.id("inputEmailHandle")).clear();
+	    driver.findElement(By.id("inputEmailHandle")).sendKeys("npdcs1632@gmail.com");
+	    driver.findElement(By.id("inputPassword")).clear();
+	    driver.findElement(By.id("inputPassword")).sendKeys("qualityassurance");
+	    driver.findElement(By.cssSelector("button[type=\"submit\"]")).click();
+	}
+	
+	@After
+	public void cleanUp(){
+		driver.findElement(By.linkText("home of npdcs1632@gmail.com")).click();
 	}
 	
 
